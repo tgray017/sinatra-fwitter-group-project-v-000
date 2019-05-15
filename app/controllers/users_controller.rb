@@ -11,7 +11,7 @@ class UsersController < ApplicationController
     else
       user = User.create(:email => params[:email], :username => params[:username], :password => params[:password])
       # hash the password
-      # start a session here
+      session[:user_id] = user.id
       redirect to '/tweets'
     end
   end
