@@ -5,7 +5,6 @@ class UsersController < ApplicationController
   end
   
   post '/signup' do
-    binding.pry
     if params.values.any? {|s| s.blank?}
       # set a flash message here
       redirect to '/signup'
