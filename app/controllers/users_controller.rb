@@ -9,7 +9,7 @@ class UsersController < ApplicationController
   end
   
   post '/signup' do
-    if params.values.any? {|s| s.blank?}
+    if invalid_signup?
       # set a flash message here
       redirect to '/signup'
     else
@@ -18,6 +18,33 @@ class UsersController < ApplicationController
       session[:user_id] = user.id
       redirect to '/tweets'
     end
+  end
+  
+  get '/login' do
+    if User.logged_in?(session)
+      redirect to '/tweets'
+    else
+      erb :"users/login"
+    end
+  end
+  
+  post '/login' do
+    if invalid_login?
+      #set a flash message her 
+      redirect to '/login'
+    else
+      user = User.find_by(:username => params[:username], :password => params[:password])
+      session[:user_id] = user.id
+      redirect to '/tweets'
+    end
+  end
+  
+  def invalid_signup?
+    params[:email].empty? || params[:username].empty? || params[:password].empty?
+  end
+  
+  def invalid_login?
+    params[:username].empty? || params[:password].empty? || User.find_by(:username => params[:username], :password => params[:password]).nil?
   end
 
 end
