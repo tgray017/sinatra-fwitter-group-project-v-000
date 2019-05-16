@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
   has_many :tweets
   
   extend Slugifiable
+  include Slugifiable
   
   def self.current_user(session)
     User.find(session[:user_id])
