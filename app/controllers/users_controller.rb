@@ -39,6 +39,28 @@ class UsersController < ApplicationController
     end
   end
   
+  get '/logout' do 
+    if User.logged_in?(session)
+      session.clear
+      redirect to '/login'
+    else
+      redirect to '/'
+    end
+  end
+  
+  get '/show' do
+    if User.logged_in?(session)
+      @user = User.current_user(session)
+      erb :"users/show"
+    else
+      redirect to '/login'
+    end
+  end
+  
+  
+  
+  
+  
   def invalid_signup?
     params[:email].empty? || params[:username].empty? || params[:password].empty?
   end
