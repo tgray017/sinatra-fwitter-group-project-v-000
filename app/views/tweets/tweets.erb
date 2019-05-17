@@ -1,1 +1,4 @@
-Welcome, <%=User.current_user(session).username%>. 
+Welcome, <%=@user.username%>.
+<%@user.tweets.each do |t|%>
+<p>look at this tweet: <%=t.content%></p>
+<%end%>

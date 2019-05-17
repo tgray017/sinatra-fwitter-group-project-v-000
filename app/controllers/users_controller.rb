@@ -33,7 +33,6 @@ class UsersController < ApplicationController
       redirect to '/login'
     else
       user = User.find_by(:username => params[:username])
-      
       if !!user.authenticate(params[:password])
         session[:user_id] = user.id
         redirect to '/tweets'
@@ -41,7 +40,6 @@ class UsersController < ApplicationController
         #set a flash message here - wrong password
         redirect to '/login'
       end
-      
     end
   end
   
@@ -54,17 +52,10 @@ class UsersController < ApplicationController
     end
   end
   
-  get '/show' do
-    if User.logged_in?(session)
-      @user = User.current_user(session)
-      erb :"users/show"
-    else
-      redirect to '/login'
-    end
+  get '/users/:slug' do
+    @user = User.find_by_slug(params[:slug])
+    erb :"users/show"
   end
-  
-  
-  
   
   
   def invalid_signup?
