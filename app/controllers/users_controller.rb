@@ -14,7 +14,6 @@ class UsersController < ApplicationController
       redirect to '/signup'
     else
       user = User.create(:email => params[:email], :username => params[:username], :password => params[:password])
-      # hash the password
       session[:user_id] = user.id
       redirect to '/tweets'
     end
@@ -30,12 +29,19 @@ class UsersController < ApplicationController
   
   post '/login' do
     if invalid_login?
-      #set a flash message her 
+      #set a flash message here - fill out all three inputs
       redirect to '/login'
     else
-      user = User.find_by(:username => params[:username], :password => params[:password])
-      session[:user_id] = user.id
-      redirect to '/tweets'
+      user = User.find_by(:username => params[:username])
+      
+      if !!user.authenticate(params[:password])
+        session[:user_id] = user.id
+        redirect to '/tweets'
+      else
+        #set a flash message here - wrong password
+        redirect to '/login'
+      end
+      
     end
   end
   
@@ -66,7 +72,7 @@ class UsersController < ApplicationController
   end
   
   def invalid_login?
-    params[:username].empty? || params[:password].empty? || User.find_by(:username => params[:username], :password => params[:password]).nil?
+    params[:username].empty? || params[:password].empty?
   end
 
 end
