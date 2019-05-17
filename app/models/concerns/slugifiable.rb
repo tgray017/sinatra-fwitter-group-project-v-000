@@ -5,6 +5,6 @@ module Slugifiable
   end
   
   def find_by_slug(s)
-    
+    self.all.detect {|user| user.slug == s}
   end
 end
