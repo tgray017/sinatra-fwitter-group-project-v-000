@@ -51,22 +51,41 @@ class TweetsController < ApplicationController
   get '/tweets/:id/edit' do
     @tweet = Tweet.find(params[:id])
     if User.logged_in?(session) && User.current_user(session).tweets.include?(@tweet)
+      #binding.pry
       erb :"tweets/edit"
     else
+      #binding.pry
       redirect to '/login'
     end
+    #binding.pry
   end
   
   patch '/tweets/:id' do
     @tweet = Tweet.find(params[:id])
-    if User.logged_in?(session) && User.current_user(session).tweets.include?(@tweet) && !invalid_tweet?
-      @tweet.update(:content => params[:content])
-      redirect to "/tweets/#{@tweet.id}"
-    elsif User.logged_in?(session) && User.current_user(session).tweets.include?(@tweet)
-      redirect to "/tweets/#{@tweet.id}/edit"
+    if User.logged_in?(session)
+      user = User.current_user(session)
+      if user.tweets.include?(@tweet) && !invalid_tweet?
+        @tweet.update(:content => params[:content])
+        redirect to "/tweets/#{@tweet.id}"
+      elsif user.tweets.include?(@tweet)
+        redirect to "/tweets/#{@tweet.id}/edit"
+      else
+        redirect to "/tweets"
+      end
     else
-      redirect to '/login'
+      redirect to "/login"
     end
+
+    
+    #@tweet = Tweet.find(params[:id])
+    #if User.logged_in?(session) && User.current_user(session).tweets.include?(@tweet) && !invalid_tweet?
+    #  @tweet.update(:content => params[:content])
+    #  redirect to "/tweets/#{@tweet.id}"
+    #elsif User.logged_in?(session) && User.current_user(session).tweets.include?(@tweet)
+    #  redirect to "/tweets/#{@tweet.id}/edit"
+    #else
+    #  redirect to '/login'
+    #end
   end
   
   def invalid_tweet?
