@@ -50,6 +50,7 @@ class TweetsController < ApplicationController
   
   get '/tweets/:id/edit' do
     @tweet = Tweet.find(params[:id])
+    #binding.pry
     if User.logged_in?(session) && User.current_user(session).tweets.include?(@tweet)
       #binding.pry
       erb :"tweets/edit"
