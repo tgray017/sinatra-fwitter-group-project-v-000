@@ -70,7 +70,7 @@ class TweetsController < ApplicationController
       elsif user.tweets.include?(@tweet)
         redirect to "/tweets/#{@tweet.id}/edit"
       else
-        redirect to "/tweets"
+        redirect to "/login"
       end
     else
       redirect to "/login"
